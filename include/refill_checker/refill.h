@@ -20,9 +20,11 @@
 #include <vector>
 
 #include <iostream>
+#include <std_msgs/Bool.h>
 
 #include <fstream>
 
+const double EMPTY_THRESHOLD = 0.7;
 
 const int X_MIN = 210;
 const int Y_MIN = 129;
@@ -30,6 +32,7 @@ const int Y_MIN = 129;
 const int X_MAX = 420;
 const int Y_MAX = 410;
 
+// For full frame testing
 // const int X_MIN = 0;
 // const int Y_MIN = 0;
 

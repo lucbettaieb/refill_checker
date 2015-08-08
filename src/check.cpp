@@ -16,6 +16,8 @@ std::vector<uint> thresholdComparison;
 double bad;
 double big_ol_size;
 
+ros::Publisher pub_;
+
 uint maximum_bad;
 
 namespace enc = sensor_msgs::image_encodings;
@@ -106,17 +108,32 @@ int main(int argc, char** argv)
 
   ros::NodeHandle nh;
   
-  loadCalibration();
+  
+  pub_ = nh.advertise<std_msgs::Bool>("/needs_refill", 1);
 
   image_transport::ImageTransport it(nh);
 
   image_transport::Subscriber sub = it.subscribe("camera/rgb/image_raw", 1, imageCallback);
 
+  std_msgs::Bool bee;
+  bee.data = false;
+  loadCalibration();
+
   while(ros::ok())
   {
     double ratio = bad / big_ol_size;
 
-    std::cout << ratio << std::endl;
+    if (ratio > EMPTY_THRESHOLD)
+    {
+      bee.data = true;
+      pub_.publish(bee);
+    }
+    else
+    {
+      bee.data = false;
+      pub_.publish(bee);
+    }
+
     ros::spinOnce();  
   }
   
